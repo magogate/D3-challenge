@@ -1,5 +1,10 @@
 /**
- *  SVG & Other Initialization
+ *  Created By: Mandar R. Gogate
+ *  Created On: 12/21/2019
+ *  References:
+ *  https://github.com/Caged/d3-tip/issues/187
+ *  https://stackoverflow.com/questions/16620267/how-to-center-text-in-a-rect-element-in-d3
+ *  https://www.w3.org/2005/10/howto-favicon
  *  */
 
 var svgWidth = 960;
