@@ -29,7 +29,7 @@ var chartGroup = svg.append("g")
 
 
 d3.csv("assets/data/data.csv").then(function(myData, err) {
-    console.log(myData);
+    //console.log(myData);
 
     myData.forEach(function(data) {
             data.poverty = +data.poverty;
@@ -50,6 +50,19 @@ d3.csv("assets/data/data.csv").then(function(myData, err) {
   var bottomAxis = d3.axisBottom(xLinearScale);
   var leftAxis = d3.axisLeft(yLinearScale);
 
+  var toolTip = d3.tip()
+                    .attr("class", "tooltip")
+                    .offset([10, -15])
+                    .html(function(d) {
+                      console.log(d)
+                      return (`<div style="background-color: black;"><p class="toolTip">${d.state}<hr><br><strong>Poverty : ${d.poverty}</strong><br><strong>Obesity: ${d.obesity}</strong></p><div>`);
+                    });
+
+  // https://github.com/Caged/d3-tip/issues/187
+  // Step 2: Create the tooltip in chartGroup.
+  chartGroup.call(toolTip);
+
+
   // Add x-axis
   chartGroup.append("g")
                     .attr("transform", `translate(0, ${height})`)
@@ -68,20 +81,41 @@ d3.csv("assets/data/data.csv").then(function(myData, err) {
                                         .append("circle")
                                         .attr("cx", d => xLinearScale(d.poverty))
                                         .attr("cy", d => yLinearScale(d.healthcare))
-                                        .attr("r", 10)
-                                        .attr("fill", "pink")
-                                        .attr("opacity", ".5");
+                                        .attr("r", 15)
+                                        .attr("fill", "#00008b")
+                                        .attr("opacity", ".5");                                        
 
-        chartGroup.selectAll("text")
+        // here I am using .text in selectALl; there is no such class as such called .text
+        // but if I use text, there are already other text attributes exists in html page
+        // due to which when I am doing data binding, and calling enter()
+        // it is considering prior text dom elements and ignoring them
+        // so enter method is finding only few orphan text and binding data against it
+        //  which is in-correct. we need d3 to bind all data points to new text
+        //  and to ignore earlier existing text dom elements
+        //  since in below case there is no .text class exists, d3 will consider no 
+        //  dom elements exists for data bind, so it will create those many dom elements
+        //  [by calling append method ] based on available data elemeents
+        chartGroup.selectAll(".text")
                             .data(myData)
                             .enter()
                             .append("text")
-                            .attr("x", d => xLinearScale(d.poverty))
-                            .attr("y", d => yLinearScale(d.healthcare))                                        
+                            // .attr("x", d => xLinearScale(d.poverty))
+                            .attr("x", function(d){
+                                          console.log(d)
+                                          return xLinearScale(d.poverty)
+                                        })
+                            .attr("y", d => yLinearScale(d.healthcare))                                     
                             .text(d => d.abbr)
                             .attr("font-family", "sans-serif")
                             .attr("font-size", "10px")
-                            .attr("fill", "red");
+                            .attr("fill", "white")
+                            .attr("weight", "bold")
+                            // https://stackoverflow.com/questions/16620267/how-to-center-text-in-a-rect-element-in-d3
+                            .attr("text-anchor", "middle");
+
+                            circlesGroup.on("mouseover", function(d){
+                                        toolTip.show(d, this)
+                                      })
 
     var labelsGroup = chartGroup.append("g")
                                 .attr("transform", `translate(${width / 2}, ${height + 20})`);
@@ -103,3 +137,4 @@ d3.csv("assets/data/data.csv").then(function(myData, err) {
                         .text("Lacks Healthcare (%)");
 
 })
+

@@ -29,3 +29,8 @@ body {
   margin: 0;
   font-size: 16px;
 }
+
+.toolTip{
+  color: white;
+  font-size: 12px;
+}
