@@ -55,7 +55,7 @@ d3.csv("assets/data/data.csv").then(function(myData, err) {
                     .offset([10, -15])
                     .html(function(d) {
                       console.log(d)
-                      return (`<div style="background-color: black;"><p class="toolTip">${d.state}<hr><br><strong>Poverty : ${d.poverty}</strong><br><strong>Obesity: ${d.obesity}</strong></p><div>`);
+                      return (`<div style="background-color: black;"><p class="toolTip" style="margin-top: 0em; margin-bottom: 0em;">${d.state}</p><hr style="border-color: azure; margin-top: 0em; margin-bottom: 0em;"><p class="toolTip" style="margin-top: 0em; margin-bottom: 0em;">Poverty : ${d.poverty}</p><p class="toolTip" style="margin-top: 0em; margin-bottom: 0em;">Obesity: ${d.obesity}</p><div>`);
                     });
 
   // https://github.com/Caged/d3-tip/issues/187
@@ -90,11 +90,11 @@ d3.csv("assets/data/data.csv").then(function(myData, err) {
         // due to which when I am doing data binding, and calling enter()
         // it is considering prior text dom elements and ignoring them
         // so enter method is finding only few orphan text and binding data against it
-        //  which is in-correct. we need d3 to bind all data points to new text
-        //  and to ignore earlier existing text dom elements
-        //  since in below case there is no .text class exists, d3 will consider no 
-        //  dom elements exists for data bind, so it will create those many dom elements
-        //  [by calling append method ] based on available data elemeents
+        // which is in-correct. we need d3 to bind all data points to new text
+        // and to ignore earlier existing text dom elements
+        // since in below case there is no .text class exists, d3 will consider no 
+        // dom elements exists for data bind, so it will create those many dom elements
+        // [by calling append method ] based on available data elemeents
         chartGroup.selectAll(".text")
                             .data(myData)
                             .enter()
